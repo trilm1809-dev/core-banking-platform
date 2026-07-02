@@ -1,10 +1,24 @@
 package com.corebankingplatform.server.entites;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-public class BaseEntity {
+import java.time.LocalDate;
 
-    private DateTimeFormat createDate;
-    private DateTimeFormat updateDate;
-    private Boolean isDeleted;
+@MappedSuperclass
+public abstract class BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @CreatedDate
+    private LocalDate createDate;
+
+    @LastModifiedDate
+    private LocalDate lastUpdateDate ;
 }
