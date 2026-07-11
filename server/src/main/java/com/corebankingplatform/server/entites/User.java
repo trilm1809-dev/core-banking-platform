@@ -3,10 +3,7 @@ package com.corebankingplatform.server.entites;
 import com.corebankingplatform.server.enums.UseRole;
 import com.corebankingplatform.server.enums.UserStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,6 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
 
     @Column(nullable = false, unique = true)
     private String email;
