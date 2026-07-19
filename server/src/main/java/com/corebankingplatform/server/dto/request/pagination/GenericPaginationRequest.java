@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Setter
 @Getter
@@ -12,7 +14,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @MappedSuperclass
 public abstract class GenericPaginationRequest {
-    private byte pageSize;
+    private int pageSize = 10;
+    private int pageNumber = 0;
     private String searchKey;
-    private byte pageNumber;
+
+    public Pageable toPageable() {
+        return PageRequest.of(pageNumber, pageSize);
+    }
 }
