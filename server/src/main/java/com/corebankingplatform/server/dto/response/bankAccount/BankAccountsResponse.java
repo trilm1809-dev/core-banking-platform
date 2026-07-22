@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BankAccounts {
+public class BankAccountsResponse {
 
     private long id;
     private String accountNumber;
@@ -27,7 +27,7 @@ public class BankAccounts {
 
     private AccountStatus status;
 
-    public BankAccounts(BankAccount entity) {
+    public BankAccountsResponse(BankAccount entity) {
 
         this.id = entity.getId();
         this.accountNumber =

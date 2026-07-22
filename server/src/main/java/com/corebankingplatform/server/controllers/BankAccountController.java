@@ -1,142 +1,84 @@
 package com.corebankingplatform.server.controllers;
 
 import com.corebankingplatform.server.dto.request.bankAccount.BankAccountSearchRequest;
+import com.corebankingplatform.server.dto.request.bankAccount.CreationalBankAccountRequest;
+import com.corebankingplatform.server.dto.request.bankAccount.UpdateBankAccountRequest;
 import com.corebankingplatform.server.dto.response.GenericResponse;
+import com.corebankingplatform.server.dto.response.bankAccount.BankAccountResponse;
 import com.corebankingplatform.server.dto.response.pagination.GenericPaginationResponse;
-import com.corebankingplatform.server.repositories.interfaces.BankAccountRepository;
+import com.corebankingplatform.server.dto.response.bankAccount.BankAccountsResponse;
+import com.corebankingplatform.server.services.interfaces.IBankAccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
 public class BankAccountController {
 
-    private final BankAccountRepository bankAccountRepository;
+    private final IBankAccountService bankAccountService;
 
     @GetMapping
-    public ResponseEntity<GenericResponse<GenericPaginationResponse<BankAccountSummaryResponse>> getAccounts(BankAccountSearchRequest request,                                                                                                             Pageable pageable
+    public ResponseEntity<GenericResponse<GenericPaginationResponse<BankAccountsResponse>>> getAccounts(
+            BankAccountSearchRequest request
     ) {
-
         return ResponseEntity.ok(
-                GenericResponse.success(
-                        bankAccountService.getAccounts(
-                                request
-                        )
-                )
+                GenericResponse.success(bankAccountService.getAccounts(request))
         );
     }
 
-    /**
-     * Detail
-     */
     @GetMapping("/{accountId}")
-    public ResponseEntity<
-            GenericResponse<BankAccountDetailResponse>
-            > getAccountDetail(
-            @PathVariable UUID accountId
+    public ResponseEntity<GenericResponse<BankAccountResponse>> getAccountDetail(
+            @PathVariable long accountId
     ) {
-
         return ResponseEntity.ok(
-                GenericResponse.success(
-                        bankAccountService.getAccountDetail(
-                                accountId
-                        )
-                )
+                GenericResponse.success(bankAccountService.getAccountDetail(accountId))
         );
     }
 
     @PostMapping
-    public ResponseEntity<GenericResponse<BankAccountDetailResponse>>
-    createAccount(
-            @Valid @RequestBody CreateBankAccountRequest request
+    public ResponseEntity<GenericResponse<BankAccountResponse>> createAccount(
+            @RequestBody CreationalBankAccountRequest request
     ) {
-
-        return ResponseEntity.ok(
-                GenericResponse.success(
-                        bankAccountService.createAccount(request)
-                )
-        );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(GenericResponse.success(bankAccountService.createAccount(request)));
     }
 
-    /**
-     * Search + Pagination
-     */
-
-
-    /**
-     * Update
-     */
     @PutMapping("/{accountId}")
-    public ResponseEntity<
-            GenericResponse<BankAccountDetailResponse>
-            > updateAccount(
-            @PathVariable UUID accountId,
-            @Valid @RequestBody UpdateBankAccountRequest request
+    public ResponseEntity<GenericResponse<BankAccountResponse>> updateAccount(
+            @PathVariable long accountId,
+            @RequestBody UpdateBankAccountRequest request
     ) {
-
         return ResponseEntity.ok(
-                GenericResponse.success(
-                        bankAccountService.updateAccount(
-                                accountId,
-                                request
-                        )
-                )
+                GenericResponse.success(bankAccountService.updateAccount(accountId, request))
         );
     }
 
-    /**
-     * Close Account
-     */
     @PatchMapping("/{accountId}/close")
-    public ResponseEntity<
-            GenericResponse<Boolean>
-            > closeAccount(
-            @PathVariable UUID accountId
-    ) {
-
+    public ResponseEntity<GenericResponse<Boolean>> closeAccount(@PathVariable long accountId) {
         bankAccountService.closeAccount(accountId);
-
-        return ResponseEntity.ok(
-                GenericResponse.success(true)
-        );
+        return ResponseEntity.ok(GenericResponse.success(true));
     }
 
-    /**
-     * Activate Account
-     */
     @PatchMapping("/{accountId}/activate")
-    public ResponseEntity<
-            GenericResponse<Boolean>
-            > activateAccount(
-            @PathVariable UUID accountId
-    ) {
-
+    public ResponseEntity<GenericResponse<Boolean>> activateAccount(@PathVariable long accountId) {
         bankAccountService.activateAccount(accountId);
-
-        return ResponseEntity.ok(
-                GenericResponse.success(true)
-        );
+        return ResponseEntity.ok(GenericResponse.success(true));
     }
 
-    /**
-     * Deactivate Account
-     */
     @PatchMapping("/{accountId}/deactivate")
-    public ResponseEntity<
-            GenericResponse<Boolean>
-            > deactivateAccount(
-            @PathVariable UUID accountId
-    ) {
-
+    public ResponseEntity<GenericResponse<Boolean>> deactivateAccount(@PathVariable long accountId) {
         bankAccountService.deactivateAccount(accountId);
-
-        return ResponseEntity.ok(
-                GenericResponse.success(true)
-        );
+        return ResponseEntity.ok(GenericResponse.success(true));
     }
-
+}

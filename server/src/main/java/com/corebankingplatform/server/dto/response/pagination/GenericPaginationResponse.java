@@ -33,10 +33,14 @@ public class GenericPaginationResponse<T> {
 
         return GenericPaginationResponse.<T>builder()
                 .items(items)
+                .page(page.getNumber())
+                .size(page.getSize())
                 .totalElements(page.getTotalElements())
                 .totalPages(page.getTotalPages())
                 .pageNumber(page.getNumber())
                 .pageSize(page.getSize())
+                .hasNext(page.hasNext())
+                .hasPrevious(page.hasPrevious())
                 .build();
     }
 

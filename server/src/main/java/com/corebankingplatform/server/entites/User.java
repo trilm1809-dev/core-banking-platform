@@ -2,9 +2,19 @@ package com.corebankingplatform.server.entites;
 
 import com.corebankingplatform.server.enums.UseRole;
 import com.corebankingplatform.server.enums.UserStatus;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -31,22 +41,43 @@ public class User extends BaseEntity implements UserDetails {
     private UserStatus userStatus;
 
     @Enumerated(EnumType.STRING)
-    private UseRole UseRole;
+    private UseRole useRole;
 
     private Boolean emailVerified;
 
-    @OneToOne( mappedBy = "user",
-            cascade = CascadeType.ALL,
-                fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = jakarta.persistence.CascadeType.ALL, fetch = FetchType.LAZY)
     private Customer customer;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (useRole == null) {
+            return List.of();
+        }
+        return List.of(new SimpleGrantedAuthority("ROLE_" + useRole.name()));
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return userStatus != UserStatus.LOCKED;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return userStatus == UserStatus.ACTIVE;
     }
 }

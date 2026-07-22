@@ -1,5 +1,6 @@
 package com.corebankingplatform.server.entites;
 
+import com.corebankingplatform.server.enums.TransactionStatus;
 import com.corebankingplatform.server.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,6 +26,10 @@ public class Transaction extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private TransactionStatus status = TransactionStatus.SUCCESS;
 
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;

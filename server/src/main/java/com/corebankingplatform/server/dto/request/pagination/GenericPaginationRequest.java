@@ -18,6 +18,14 @@ public abstract class GenericPaginationRequest {
     private int pageNumber = 0;
     private String searchKey;
 
+    public void setPage(int page) {
+        this.pageNumber = page;
+    }
+
+    public void setSize(int size) {
+        this.pageSize = size;
+    }
+
     public Pageable toPageable() {
         return PageRequest.of(pageNumber, pageSize);
     }
